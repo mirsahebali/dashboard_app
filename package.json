@@ -12,22 +12,26 @@
     "@types/node": "18.15.5",
     "@types/react": "18.0.28",
     "@types/react-dom": "18.0.11",
+    "chart.js": "^4.2.1",
     "eslint": "8.36.0",
     "eslint-config-next": "13.2.4",
+    "mongodb": "^5.1.0",
     "next": "13.2.4",
+    "node-fetch": "^3.3.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-icons": "^4.8.0",
     "typescript": "5.0.2"
   },
   "devDependencies": {
     "@apollo/client": "^3.7.10",
+   
     "autoprefixer": "^10.4.14",
     "chartjs": "^0.3.24",
     "graphql": "^16.6.0",
     "graphql-tag": "^2.12.6",
     "postcss": "^8.4.21",
     "react-chartjs-2": "^5.2.0",
-    "realm-web": "^2.0.0",
     "tailwindcss": "^3.2.7"
   }
 }

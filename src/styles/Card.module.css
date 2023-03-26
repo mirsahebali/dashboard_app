@@ -1,0 +1,18 @@
+.card {
+          cursor: pointer;
+          width: 190px;
+          height: 254px;
+          background: rgb(155, 240, 248);
+          border-radius: 5px;
+          border: 1px solid rgba(0, 0, 255, .2);
+          transition: all .2s;
+          box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, .2);
+         }
+         
+         .card:hover {
+          box-shadow: -12px 12px 2px -1px rgba(0, 0, 255, .2);
+         }
+         
+         
+         
+         
