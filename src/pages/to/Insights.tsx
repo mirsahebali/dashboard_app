@@ -28,7 +28,6 @@ export async function getServerSideProps() {
     console.error(e);
   }
 }
-
 function Insights({ data }: Prop) {
   const insightsData: Data[] = data.res;
   const [findCountry, setFindCountry] = useState<string>();
