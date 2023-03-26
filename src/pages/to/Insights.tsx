@@ -3,6 +3,8 @@ import clientPromise from "@/lib/mongodb";
 import Link from "next/link";
 import Card from "../components/Card";
 import Filter from "../components/Filter";
+import { Data } from "@/types";
+import { useState } from "react";
 export async function getServerSideProps() {
   try {
     const client = await clientPromise;
@@ -23,20 +25,33 @@ export async function getServerSideProps() {
 
 
 function Insights({ data }: any) {
-  const insightsData = data.res;
+  const insightsData: Data[] = data.res;
+const [findCountry, setFindCountry] = useState<string>();
+const [foundedCountryList, setFoundedCountryList] = useState<Data[]>(insightsData)
+
+const filteredList = foundedCountryList.filter((obj:any)=> {
+return findCountry === obj.country
+})
+
+
+  function onFilterValueSelected(filterValue: any) {
+    setFindCountry(filterValue)
+    
+  }
 
   return (
     <div className="flex">
       <Sidebar />
       <div>
         <div className="text-2xl font-bold">Insights</div>
-        <Filter data={insightsData}/>
+        <Filter data={insightsData} filterValueSelected={onFilterValueSelected} />
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
-          {insightsData.map((data: any) => {
+          {filteredList.map((data: any) => {
             return (
               <div key={data._id} className="m-2">
-             <Card  title={data.title} country={data.country} region={data.region} />
-             </div>
+                <Link href={data.url}>
+                  <Card title={data.title} country={data.country} region={data.region} /></Link>
+              </div>
             );
           })}
         </div>
