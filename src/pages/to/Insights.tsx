@@ -5,6 +5,13 @@ import Card from "../components/Card";
 import Filter from "../components/Filter";
 import { Data } from "@/types";
 import { useState } from "react";
+
+interface Prop{
+data:{
+res: Data[]
+}
+}
+
 export async function getServerSideProps() {
   try {
     const client = await clientPromise;
@@ -22,21 +29,18 @@ export async function getServerSideProps() {
   }
 }
 
-
-
-function Insights({ data }: any) {
+function Insights({ data }: Prop) {
   const insightsData: Data[] = data.res;
-const [findCountry, setFindCountry] = useState<string>();
-const [foundedCountryList, setFoundedCountryList] = useState<Data[]>(insightsData)
+  const [findCountry, setFindCountry] = useState<string>();
+  const [foundedCountryList, setFoundedCountryList] =
+    useState<Data[]>(insightsData);
 
-const filteredList = foundedCountryList.filter((obj:any)=> {
-return findCountry === obj.country
-})
-
+  const filteredList = foundedCountryList.filter((obj: any) => {
+    return findCountry === obj.country;
+  });
 
   function onFilterValueSelected(filterValue: any) {
-    setFindCountry(filterValue)
-    
+    setFindCountry(filterValue);
   }
 
   return (
@@ -44,13 +48,21 @@ return findCountry === obj.country
       <Sidebar />
       <div>
         <div className="text-2xl font-bold">Insights</div>
-        <Filter data={insightsData} filterValueSelected={onFilterValueSelected} />
+        <Filter
+          data={insightsData}
+          filterValueSelected={onFilterValueSelected}
+        />
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
           {filteredList.map((data: any) => {
             return (
               <div key={data._id} className="m-2">
                 <Link href={data.url}>
-                  <Card title={data.title} country={data.country} region={data.region} /></Link>
+                  <Card
+                    title={data.title}
+                    country={data.country}
+                    region={data.region}
+                  />
+                </Link>
               </div>
             );
           })}
