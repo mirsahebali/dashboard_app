@@ -27,50 +27,35 @@ export async function getServerSideProps() {
     console.error(e);
   }
 }
-
-
 export default function Insights({ data }: Prop) {
   const [pr, setPr] = useState("country");
   const insightsData: Data[] = data.stats;
-  const [filteredList, setfilteredList] = useState(insightsData);
   const [filterText, updateFilterText] = useState<string>("");
   const [fList, updatefList] = useState(insightsData);
   let arr: any[] = []
-
-
-
   const arrayProps: string[] = [
     "All",
     "country",
     "region",
     "end_year",
     "topic",
-
+    "sector",
+    "source"
   ];
-
-
-
-  function onFilterValueSelectedProp(filterValue: any) {
+ function onFilterValueSelectedProp(filterValue: any) {
     setPr(filterValue);
-    
   }
-
   function onFilterValueSelected(filterValue: any) {
-   
     updateFilterText(filterValue);
-    
   }
-
   function arrayMaker(a: any, b: any): any[] {
     let arr = []
     arr = insightsData.filter((obj: any) => obj[a] != null && obj[a] != "" && obj[a] != undefined).reduce((accumulator: any, current: any) => {
       let existing = accumulator.find((item: any) => item[a] === current[a]
-
       );
       if (existing) {
         existing[b] += parseInt(current[b])
       } else {
-
         accumulator.push(
           {
             [a]: current[a],
@@ -79,16 +64,14 @@ export default function Insights({ data }: Prop) {
       }
       return accumulator
     }, [])
-
     return arr
   }
-useEffect( ()=> {
-  if (pr === "All")
-    updatefList(insightsData)
-  else
-  updatefList(insightsData.filter((item: any) => item[pr] === filterText))
-
-} , [filterText, insightsData, pr])
+  useEffect(() => {
+    if (pr === "All")
+      updatefList(insightsData)
+    else
+      updatefList(insightsData.filter((item: any) => item[pr] === filterText))
+  }, [filterText, insightsData, pr])
   return (
     <div className="flex ">
       <Sidebar />
@@ -101,7 +84,7 @@ useEffect( ()=> {
           filterValueSelectedProp={onFilterValueSelectedProp}
           filterValueSelected={onFilterValueSelected}
         />
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
           {fList.map((data: any) => {
             return (
               <div key={data._id} className="m-2">
@@ -118,7 +101,6 @@ useEffect( ()=> {
     </div>
   );
 }
-
 interface prop {
   data: any[];
   p: string;
@@ -126,8 +108,7 @@ interface prop {
   filterValueSelectedProp: Function;
   filterValueSelected: Function;
 }
-
-function Filter({
+export function Filter({
   data,
   p,
   ar,
@@ -142,7 +123,8 @@ function Filter({
   }
 
   return (
-    <div className={styles.select}>
+    <div className="flex flex-col">
+      <div className="text-cyan-700 font-bold"> Select your filter</div>
       <select className={styles._select}
         name={`props`}
         id={`props`}
