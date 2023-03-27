@@ -6,50 +6,68 @@ import { Data } from "@/types";
 import { useState } from "react";
 
 interface Prop{
-data:{
-res: Data[]
-}
+data: {stats: Data[]}
+
+func: Function
 }
 
 export async function getServerSideProps() {
   try {
     const client = await clientPromise;
     const db = client.db("statisticsDB");
-    const stats = await db.collection("worldStats").find({}).toArray();
+    const res = await db.collection("worldStats").find({}).toArray();
 
-    const res = JSON.parse(JSON.stringify(stats));
+    const stats = JSON.parse(JSON.stringify(res));
     return {
       props: {
-        data: { res },
+        data: { stats },
       },
     };
   } catch (e) {
     console.error(e);
   }
 }
-function Insights({ data }: Prop) {
-  const insightsData: Data[] = data.res;
-  const [findCountry, setFindCountry] = useState<string>();
-  const [foundedCountryList, setFoundedCountryList] =
-    useState<Data[]>(insightsData);
+export default function Insights({ data }: Prop) {
+  const [pr, setPr] = useState("country")
+  const insightsData: Data[] = data.stats;
+  const [filteredList, setfilteredList] = useState(insightsData)
+const [filterText, updateFilterText] = useState<string>("")
+const [fList, updatefList] = useState(insightsData)
+function getData(d:any[], prop:string){
+let newVal = d.map((curr:any)=> {
+return curr[prop]
+})
+ 
+ return newVal = ["All", ...new Set(newVal)] 
+}
+const arrayProps:string[] = ["country", "region", "end_year","title", "topic", "sector", "insight"]
 
-  const filteredList = foundedCountryList.filter((obj: any) => {
-    return findCountry === obj.country;
-  });
+let filteredData = insightsData.map((item:any)=> item[pr])
+filteredData = [...new Set(filteredData)]
 
-  function onFilterValueSelected(filterValue: any) {
-    setFindCountry(filterValue);
-  }
+
+function onFilterValueSelectedProp(filterValue:any){
+setPr(filterValue)
+}
+
+function returnData(value:any){
+ let currData = insightsData.filter((item:any)=> item[pr] === value)
+return currData
+}
+
+function onFilterValueSelected(filterValue:any){
+  updateFilterText(filterValue);
+updatefList(returnData(filterText))
+
+}
+
 
   return (
-    <div className="flex">
+    <div className="flex ">
       <Sidebar />
       <div>
         <div className="text-2xl font-bold">Insights</div>
-        <Filter
-          data={insightsData}
-          filterValueSelected={onFilterValueSelected}
-        />
+       <Filter data={fList} p={`${pr}`} ar={arrayProps} filterValueSelectedProp={onFilterValueSelectedProp} filterValueSelected={onFilterValueSelected}/>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 ">
           {filteredList.map((data: any) => {
             return (
@@ -70,48 +88,34 @@ function Insights({ data }: Prop) {
   );
 }
 
- function Filter({ data, filterValueSelected }: any) {
-  function onFilterValueChanged(event: any) {
-    filterValueSelected(event.target.value)
+interface prop{
+data: any[],
+p: string,
+ar: string[],
+filterValueSelectedProp: Function,
+filterValueSelected: Function
+}
+
+function Filter({data, p, ar,  filterValueSelectedProp, filterValueSelected}:prop){
+  function onFilterValueChange(event:any){
+  filterValueSelectedProp(event.target.value)
   }
-interface CountryObject {
-  country: string;
-  id: string;
+function onFilterValueSelected(event:any){
+  filterValueSelected(event.target.value);
 }
 
-const countries: CountryObject[] = [];
-const getCountries = (data: Data[]): CountryObject[] => {
-
-  data.forEach((obj: any) => {
-    const country = obj.country;
-    const id = obj._id;
-    const index = countries.findIndex((o) => o.country === country);
-
-    if (index === -1) {
-      countries.push({ country, id });
-    }
-  });
-
-  return countries;
-};
-
-const cD = getCountries(data)
-  return <div>
-    <select name="country" id="countryFilter" title="country" onChange={onFilterValueChanged}>
-      {cD.filter((obj: any) => {
-        return obj.country != null && obj.country != undefined && obj.country != ""
-      }).map((d: any) => {
-        return <option key={d.id} value={d.country}>{d.country}</option>
-      })}
-    </select>
-    <select name="region" id="regionFilter" title="region" onChange={onFilterValueChanged}>
-      {cD.filter((obj: any) => {
-        return obj.region != null && obj.region != undefined && obj.region != ""
-      }).map((d: any) => {
-        return <option key={d.id} value={d.region}>{d.region}</option>
-      })}
-    </select>
-  </div>
+return <div>
+  <select name={`props`} id={`props`} title={`props`} onChange={onFilterValueChange}>
+{ar.map((item: any, index)=>{
+return <option key={index} value={item}>{item}</option>
+})}
+</select>
+<select name={`${p}`} id={`${p}`}title={`${p}`} onChange={onFilterValueSelected}>
+{data.map((item: any, index)=>{
+return <option key={item._id} value={item[p]}>{item[p]}</option>
+})}
+</select>
+</div>
 }
 
-export default Insights;
+

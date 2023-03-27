@@ -16,17 +16,17 @@ export async function getServerSideProps() {
   try {
     const client = await clientPromise;
     const db = client.db("statisticsDB");
-    const stats = await db.collection("worldStats").find({}).toArray()
+    const res = await db.collection("worldStats").find({}).toArray()
 
-    const res = JSON.parse(JSON.stringify(stats))
+    const stats = JSON.parse(JSON.stringify(res))
     return {
       props: {
-        data: {res}
+        data: { stats }
       }
     }
-} catch (e) {
+  } catch (e) {
     console.error(e);
-}
+  }
 }
 
 ChartJS.register(
@@ -64,55 +64,41 @@ export const options2 = {
   },
 };
 
-interface cI {
-  country: string;
-  intensity: number;
-}
-interface rI {
-  region: string;
-  intensity: number;
-}
 
 export default function CountriesIntensity({ data }: any) {
-  const countriesAndIntensity: cI[] = data.res.filter((d: any) => d.country !== "" && d.country !== undefined)
-  .reduce((accumulator: any, current: any) => {
-    let existing = accumulator.find(
-      (item: any) => item.country === current.country
-    );
-    if (existing) {
-      existing.intensity += parseInt(current.intensity);
-    } else {
-      accumulator.push({
-        country: current.country,
-        intensity: parseInt(current.intensity),
-      });
-    }
-    return accumulator;
-  }, []);
+ 
+  let arr: any[] = []
 
-  console.log(countriesAndIntensity.sort((a, b) => a.intensity - b.intensity));
+  function arrayMaker(a: any, b: any): any[] {
+    arr = data.stats.filter((obj: any) => obj[a] != null && obj[a] != "" && obj[a] != undefined).reduce((accumulator: any, current: any) => {
+      let existing = accumulator.find((item: any) => item[a] === current[a]
 
-  const regionsAndIntensity = data.res
-    .filter((d: rI) => d.region != "" && d.region != undefined)
-    .reduce((accumulator: any, current: any) => {
-      let existing: { country: string; intensity: number | string } = accumulator.find(
-        (item: { region: string }) => item.region === current.region
       );
-
-      if (existing != null || existing != undefined) {
-        existing.intensity = existing.intensity + current.intensity;
+      if (existing) {
+        existing[b] += parseInt(current[b])
       } else {
-        accumulator.push({
-          region: current.region,
-          intensity: current.intensity,
-        });
+       
+        accumulator.push(
+          {
+          [a]: current[a],
+          [b]: current[b]
+        })
       }
-      return accumulator;
-    }, []);
+      return accumulator
+    }, [])
 
-  const countryLabels = countriesAndIntensity.map((d: any) => d.country);
+    return arr
+  }
 
-  const regionLabels = regionsAndIntensity.map((d: any) => d.region);
+  console.log(arrayMaker("region", "relevance"));
+  // console.log(arrayMaker("region", "relevance"));
+
+function createLabels(labelName:string){
+return arrayMaker(labelName, "").map(d => d[labelName])
+}
+console.log(createLabels("country"));
+
+
   const backgroundColorArray = [
     'rgba(255, 99, 132, 0.8)',
     'rgba(54, 162, 235, 0.8)',
@@ -136,35 +122,35 @@ export default function CountriesIntensity({ data }: any) {
     'rgba(54, 162, 235, 0.8)',
     'rgba(255, 206, 86, 0.8)',
   ];
-  
+
   const dataSet1 = {
-    labels: countryLabels,
+    labels: createLabels("country"),
     datasets: [
       {
         label: "Countries Vs Intensity",
-        data: countriesAndIntensity.sort((a, b) => a.intensity - b.intensity).map((d: any) => d.intensity),
+        data: arrayMaker("country", "intensity").sort((a, b) => a.intensity - b.intensity).map((d: any) => d.intensity),
         backgroundColor: backgroundColorArray,
       },
     ],
   };
   const dataSet2 = {
-    labels: regionLabels,
+    labels: createLabels("region"),
     datasets: [
       {
         label: "Regions Vs Intensity",
-        data: regionsAndIntensity.sort((a:any, b:any)=> a.intensity - b.intensity).map((d: any) => d.intensity),
+        data: arrayMaker("region", "intensity").sort((a: any, b: any) => a.intensity - b.intensity).map((d: any) => d.intensity),
         backgroundColor: backgroundColorArray,
       },
     ],
   };
-  
+
   return (
     <div className="flex">
-    <Sidebar/>
-    <div className="flex flex-col">
-      <Pie data={dataSet1} options={options1} />
-      <Pie data={dataSet2} options={options2} />
-    </div>
+      <Sidebar />
+      <div className="flex flex-col">
+        <Pie data={dataSet1} options={options1} />
+        <Pie data={dataSet2} options={options2} />
+      </div>
     </div>
   );
 }

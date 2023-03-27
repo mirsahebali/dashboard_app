@@ -1,5 +1,5 @@
 import { Router, useRouter } from "next/router";
-import { AiOutlineLineChart, AiFillSetting } from "react-icons/ai";
+import { AiOutlineLineChart } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { FaFilter } from "react-icons/fa";
 import { useState } from "react";
@@ -20,8 +20,8 @@ const handleItemClick = (id:string) => {
       <div>
       <h1 className="text-xl font-bold justify-center items-center flex">App</h1>
       <ul className="flex flex-col">
-        <li className={`flex justify-center ${selected === "item1"? "bg-black text-white": ""} bg-white py-3 rounded-md my-2 hover:bg-black  duration-300 hover:scale-110 hover:text-red-100 px-2`} onClick={()=> {
-          handleItemClick("item1")
+        <li className={`flex justify-center ${selected === "item1"? "bg-black text-white": "bg-white"}   py-3 rounded-md my-2 hover:bg-black  duration-300 hover:scale-110 hover:text-red-100 px-2`} onClick={()=> {
+          handleItemClick(`item1`)
           router.push("/to/Charts")}}>
           <span className="text-2xl flex justify-center items-center ">
             <AiOutlineLineChart />
@@ -30,8 +30,8 @@ const handleItemClick = (id:string) => {
             Visuals
           </span>
         </li>
-        <li className={`flex justify-center ${selected === "item2"? "bg-black text-white": ""} bg-white py-3 rounded-md my-2 hover:bg-black  duration-300 hover:scale-110 hover:text-red-100 px-2`} onClick={()=> {
-          handleItemClick("item2")
+        <li className={`flex justify-center ${selected === `bg-black text-white item2`? "bg-black text-white": "bg-white"}  py-3 rounded-md my-2 hover:bg-black  duration-300 hover:scale-110 hover:text-red-100 px-2`} onClick={()=> {
+          handleItemClick(`bg-black text-white item2`)
           router.push("/to/Insights")}}>
           <span className="text-2xl flex justify-center items-center ">
             {" "}
