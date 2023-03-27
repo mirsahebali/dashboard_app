@@ -1,7 +1,7 @@
 .card {
   cursor: pointer;
-  width: fit-content;
-  height: fit-content;
+  width: 30vw;
+  height: 40vh;
   background: rgb(155, 240, 248);
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 255, 0.2);
