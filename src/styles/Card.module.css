@@ -1,12 +1,15 @@
 .card {
   cursor: pointer;
-  width: 30vw;
-  height: 40vh;
+  
+  width:  fit-content;
+  height: fit-content;
   background: rgb(155, 240, 248);
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 255, 0.2);
   transition: all 0.2s;
   box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+  flex-wrap: wrap;
+  padding: 1rem;
 }
 
 .card:hover {

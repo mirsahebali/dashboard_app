@@ -9,10 +9,14 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { Pie } from "react-chartjs-2";
+import { Pie, Line, Bar, } from "react-chartjs-2";
 import clientPromise from "@/lib/mongodb";
 import Sidebar from "../Sidebar";
 import { Data } from "@/types";
+import { FaFilter } from "react-icons/fa";
+import Select from "react-select"
+import { Transition } from "@headlessui/react";
+
 export async function getServerSideProps() {
   try {
     const client = await clientPromise;
@@ -41,27 +45,23 @@ ChartJS.register(
 );
 
 
+interface Option  {label: string, value:  string , id: number}
 export default function CountriesIntensity({ data }: any) {
-  const array1: string[] = [
-    "country",
-    "region",
-    "end_year",
-    "topic",
-    "sector",
-    "source"
-  ];
-  const array2: string[] = [
-  "relevance",
-  "likelihood",
-  "intensity",
-
+  const array1: Option[] = [
+  {label: "Country", value: "country", id: 1},
+  {label: "Region", value: "region", id: 2},
+  {label: "Topic", value: "topic", id: 3},
+  {label: "Sector", value: "sector", id: 4}
+  ]
+  const array2: Option[] = [
+    {label: "Relevance", value: "relevance", id: 1},
+    {label: "Intensity", value: "intensity", id: 2},
+    {label: "Impact", value: "impact", id: 3},
   ]
   const [pr1, setPr1] = useState<string>("country");
   const [pr2, setPr2] = useState<string>("intensity");
-  const chartsData: Data[] = data.stats;
-  const [fList, updatefList] = useState<any[]>(chartsData);
-
- const options1 = {
+const [showFilter, setShowFilters] = useState(false)
+  const options1 = {
     responsive: true,
     plugins: {
       legend: {
@@ -73,7 +73,7 @@ export default function CountriesIntensity({ data }: any) {
       },
     },
   };
-  
+
   function arrayMaker(a: any, b: any): any[] {
     let arr: any[] = [];
     arr = data.stats
@@ -96,7 +96,14 @@ export default function CountriesIntensity({ data }: any) {
     return arr;
   }
 
+function selected1(selected:any){
+setPr1(selected.value);
 
+}
+function selected2(selected:any){
+  setPr2(selected.value);
+  
+  }
 
   function createLabels(labelName: string) {
     return arrayMaker(labelName, "").map((d) => d[labelName]);
@@ -126,7 +133,7 @@ export default function CountriesIntensity({ data }: any) {
     "rgba(255, 206, 86, 0.8)",
   ];
 
-  const dataSet1 = {
+  const dataset = {
     labels: createLabels(`${pr1}`),
     datasets: [
       {
@@ -139,90 +146,41 @@ export default function CountriesIntensity({ data }: any) {
     ],
   };
 
-  function onFilterValueSelected1(filterValue: any) {
-    setPr1(filterValue);
-    console.log(filterValue);
-
-  }
-  function onFilterValueSelected2(filterValue: any) {
-    setPr2(filterValue);
-    console.log(filterValue);
-    
-  }
 
   return (
-    <div className="flex">
-      <Sidebar />
+  
 
-      <div className="flex flex-col">
+      <div className="flex flex-col ">
 
-      <Filter
-          ar2={array2}
-          ar1={array1}
-          filterValueSelected1={onFilterValueSelected1}
-filterValueSelected2={onFilterValueSelected2}
-          p1={`${pr1}`}
-          p2={`${pr2}`}
-        /> 
-        <Pie data={dataSet1} options={options1} />
+        <div className="flex justify-center ">
+          <div className={`w-fit flex-col flex justify-center items-center`}>
+            <button className="shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl  p-2 m-2 duration-300 w-fit  rounded-full hover:text-white hover:bg-black" onClick={() => {
+        setShowFilters(!showFilter)
+        console.log(showFilter);
+        
+      }}><FaFilter />{""}</button>
       </div>
-    </div>
+      <Transition 
+      show={showFilter}
+      enter="duration-300"
+        enterFrom=" scale-0"
+        enterTo="scale-100"
+        leave="duration-150"
+        leaveFrom=" scale-100"
+        leaveTo="scale-0"
+      >
+<Select
+options={array1}
+onChange={selected1}
+/>
+<Select
+options={array2}
+onChange={selected2}
+/>
+      </Transition></div>
+        <Pie data={dataset} options={options1} />
+      </div>
+    
   );
 }
-interface prop{
-ar1: string[],
-ar2: string[],
-filterValueSelected1: Function,
-filterValueSelected2: Function,
-p1:string,
-p2:string
-}
 
-export function Filter({
-  ar1,
-  ar2,
-  filterValueSelected1,
-  filterValueSelected2,
-  p1,
-  p2
-}: prop) {
-  function onFilterValueChange1(event: any) {
-    filterValueSelected1(event.target.value);
-  }
-  function onFilterValueChange2(event: any) {
-    filterValueSelected2(event.target.value);
-  }
-
-  return (
-    <div className="flex flex-col">
-      <div className="text-cyan-700 font-bold flex justify-center text-2xl"> Choose Your Data Chart</div>
-      <select 
-        id={`${p1}`}
-        title={`${p1}`}
-        onChange={onFilterValueChange1}
-      >
-        {ar1.map((item: any, index) => {
-          return (
-            <option key={index} value={item}>
-              {item}
-            </option>
-          );
-        })}
-      </select>
-      <select 
-        name={`${p2}`}
-        id={`${p2}`}
-        title={`${p2}`}
-        onChange={onFilterValueChange2}
-      >
-        {ar2.map((item: any, index) => {
-          return (
-            <option key={index} value={item}>
-              {item}
-            </option>
-          );
-        })}
-      </select>
-    </div>
-  );
-}
