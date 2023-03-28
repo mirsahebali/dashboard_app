@@ -5,3 +5,19 @@
 *{
           font-family: 'Montserrat', sans-serif;
 }
+:root{
+--background: white;
+--text-primary: black;
+--text-secondary: rgb(17, 35, 44);
+--accent: rgb(17, 35, 44);
+--border: #333;
+--page-bg: white;
+}
+[data-theme='dark']{
+--background: rgb(20, 28, 46);
+--text-primary: white;
+--text-secondary: rgb(17, 35, 44);
+--accent: rgb(17, 35, 44);
+--border: #d6c0c0;
+--page-bg: #191919;
+}

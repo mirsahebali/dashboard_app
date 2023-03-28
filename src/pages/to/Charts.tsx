@@ -11,7 +11,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
-import { Pie, Line, Bar, } from "react-chartjs-2";
+import { Pie, Line, Bar,PolarArea } from "react-chartjs-2";
 import clientPromise from "@/lib/mongodb";
 import Tab from "../Tab";
 import { Data } from "@/types";
@@ -67,12 +67,14 @@ export default function CountriesIntensity({ data }: any) {
   const [typeChart, selectTypeChart] = useState("pie")
   const [showFilter, setShowFilters] = useState(false)
 
-const charts = [
-{label: "Pie", value:"pie", id: 1},
-{label: "Bar", value:"Bar", id: 2},
-{label: "Line", value:"Line", id: 3},
-{label: "Stact", value:"Stack", id:4 }
-]
+  const charts: Option[] = [
+    { label: "Pie", value: "pie", id: 1 },
+    { label: "Bar", value: "bar", id: 2 },
+    { label: "Line", value: "line", id: 3 },
+    { label: "Stack", value: "stack", id: 4 },
+    { label: "Polar Area", value: "polar", id: 4 },
+
+  ]
 
   function arrayMaker(a: any, b: any): any[] {
     let arr: any[] = [];
@@ -165,12 +167,12 @@ const charts = [
 
   const colors = [];
 
-for (let i = 0; i < 30; i++) {
-  const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
-  colors.push(randomColor);
-}
+  for (let i = 0; i < 30; i++) {
+    const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+    colors.push(randomColor);
+  }
 
-console.log(colors);
+  console.log(colors);
 
 
   const dataset = {
@@ -182,7 +184,7 @@ console.log(colors);
           .sort((a, b) => a[pr2] - b[pr2])
           .map((d: any) => d[pr2]),
         backgroundColor: backgroundColorArray,
-       borderColor: colors
+        borderColor: colors
       },
     ],
   };
@@ -195,12 +197,17 @@ console.log(colors);
           .sort((a, b) => a[pr2] - b[pr2])
           .map((d: any) => d[pr2]),
         backgroundColor: backgroundColorArray,
-       borderColor: colors
+        borderColor: colors
       },
     ],
   };
 
+  function chartSelected(selected: any) {
+    selectTypeChart(selected.value)
 
+  }
+const pie = (typeChart === "pie")? <Pie data={dataset} options={options1} />: ""
+const bar = (typeChart === "bar")? <Bar data={dataset2} options={options1}/>: ""
   return (
 
 
@@ -226,19 +233,27 @@ console.log(colors);
             leaveTo="scale-0"
           >
             <Select
+              className="dark:text-black"
               options={array1}
               onChange={selected1}
             />
             <Select
+              className="dark:text-black"
+
               options={array2}
               onChange={selected2}
+            />
+            <Select
+              className="dark:text-black"
+
+              options={charts}
+              onChange={chartSelected}
             />
           </Transition>
         </div>
       </div>
-      <Pie data={dataset} options={options1} />
-      <Bar data={dataset2} options={horzontalBarOptions}/>
-    </div>
+   <div> {bar}{pie}
+   </div> </div>
 
   );
 }

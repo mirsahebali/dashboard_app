@@ -1,13 +1,10 @@
 import Head from "next/head";
-// import CountriesImpact from "./to/Charts";
-import clientPromise from "@/lib/mongodb";
-import Tab from "./Tab";
-import Charts from "./to/Charts"
 import {AiFillPieChart} from "react-icons/ai"
 import { MdOutlineTableChart } from "react-icons/md";
 import Link from "next/link";
+import { useRouter } from 'next/router';
 export default function Home() {
-
+const router = useRouter()
   return (
     <>
       <Head>
@@ -16,10 +13,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex justify-center items-center">
+      <main className="flex justify-center items-center dark:bg-cyan-900">
         <div className="flex text-2xl font-bold">
-         <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col justify-center items-center rounded-md m-5   ease-in duration-300">View Data <Link href={`to/Charts`}><button className="" title="btn-chart"type="button"><AiFillPieChart/></button></Link></div>
-         <div className="w-[40vw] h-[40vh] bg-cyan-500 flex flex-col justify-center items-center rounded-md m-5">View Insights<Link href={`to/Insights`}><button className="" title="btn-chart"type="button"><MdOutlineTableChart/></button></Link></div>
+       <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col justify-center items-center rounded-md m-5   ease-in duration-300 cursor-pointer" onClick={()=> router.push("/to/Charts")}>View Data <Link href={`to/Charts`}><AiFillPieChart/></Link></div>
+      
+     <div className="w-[40vw] h-[40vh] bg-cyan-500 flex flex-col justify-center items-center rounded-md m-5 cursor-pointer" onClick={()=> router.push("/to/Insights")}>View Insights<MdOutlineTableChart/></div>
 </div>
       </main>
     </>
