@@ -4,6 +4,8 @@ import {
   CategoryScale,
   LinearScale,
   BarElement,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
   Legend,
@@ -11,7 +13,7 @@ import {
 } from "chart.js";
 import { Pie, Line, Bar, } from "react-chartjs-2";
 import clientPromise from "@/lib/mongodb";
-import Sidebar from "../Sidebar";
+import Tab from "../Tab";
 import { Data } from "@/types";
 import { FaFilter } from "react-icons/fa";
 import Select from "react-select"
@@ -41,38 +43,36 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  ArcElement
+  ArcElement,
+  LineElement,
+  PointElement
 );
 
 
-interface Option  {label: string, value:  string , id: number}
+interface Option { label: string, value: string, id: number }
 export default function CountriesIntensity({ data }: any) {
   const array1: Option[] = [
-  {label: "Country", value: "country", id: 1},
-  {label: "Region", value: "region", id: 2},
-  {label: "Topic", value: "topic", id: 3},
-  {label: "Sector", value: "sector", id: 4}
+    { label: "Country", value: "country", id: 1 },
+    { label: "Region", value: "region", id: 2 },
+    { label: "Topic", value: "topic", id: 3 },
+    { label: "Sector", value: "sector", id: 4 }
   ]
   const array2: Option[] = [
-    {label: "Relevance", value: "relevance", id: 1},
-    {label: "Intensity", value: "intensity", id: 2},
-    {label: "Impact", value: "impact", id: 3},
+    { label: "Relevance", value: "relevance", id: 1 },
+    { label: "Intensity", value: "intensity", id: 2 },
+    { label: "Impact", value: "impact", id: 3 },
   ]
   const [pr1, setPr1] = useState<string>("country");
   const [pr2, setPr2] = useState<string>("intensity");
-const [showFilter, setShowFilters] = useState(false)
-  const options1 = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: "top" as const,
-      },
-      title: {
-        display: true,
-        text: `${pr1} vs ${pr2}`,
-      },
-    },
-  };
+  const [typeChart, selectTypeChart] = useState("pie")
+  const [showFilter, setShowFilters] = useState(false)
+
+const charts = [
+{label: "Pie", value:"pie", id: 1},
+{label: "Bar", value:"Bar", id: 2},
+{label: "Line", value:"Line", id: 3},
+{label: "Stact", value:"Stack", id:4 }
+]
 
   function arrayMaker(a: any, b: any): any[] {
     let arr: any[] = [];
@@ -96,13 +96,13 @@ const [showFilter, setShowFilters] = useState(false)
     return arr;
   }
 
-function selected1(selected:any){
-setPr1(selected.value);
+  function selected1(selected: any) {
+    setPr1(selected.value);
 
-}
-function selected2(selected:any){
-  setPr2(selected.value);
-  
+  }
+  function selected2(selected: any) {
+    setPr2(selected.value);
+
   }
 
   function createLabels(labelName: string) {
@@ -132,6 +132,46 @@ function selected2(selected:any){
     "rgba(54, 162, 235, 0.8)",
     "rgba(255, 206, 86, 0.8)",
   ];
+  const options1 = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top" as const,
+      },
+      title: {
+        display: true,
+        text: `${pr1} vs ${pr2}`,
+      },
+    },
+  };
+  const horzontalBarOptions = {
+    indexAxis: 'y' as const,
+    elements: {
+      bar: {
+        borderWidth: 2,
+      },
+    },
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'right' as const,
+      },
+      title: {
+        display: true,
+        text: `${pr1.toLocaleUpperCase()} vs ${pr2.toUpperCase()}`,
+      },
+    },
+  };
+
+  const colors = [];
+
+for (let i = 0; i < 30; i++) {
+  const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  colors.push(randomColor);
+}
+
+console.log(colors);
+
 
   const dataset = {
     labels: createLabels(`${pr1}`),
@@ -142,45 +182,64 @@ function selected2(selected:any){
           .sort((a, b) => a[pr2] - b[pr2])
           .map((d: any) => d[pr2]),
         backgroundColor: backgroundColorArray,
+       borderColor: colors
+      },
+    ],
+  };
+  const dataset2 = {
+    labels: createLabels(`${pr1}`),
+    datasets: [
+      {
+        label: `${pr1} vs ${pr2}`,
+        data: arrayMaker(`${pr1}`, `${pr2}`)
+          .sort((a, b) => a[pr2] - b[pr2])
+          .map((d: any) => d[pr2]),
+        backgroundColor: backgroundColorArray,
+       borderColor: colors
       },
     ],
   };
 
 
   return (
-  
 
-      <div className="flex flex-col ">
 
-        <div className="flex justify-center ">
-          <div className={`w-fit flex-col flex justify-center items-center`}>
-            <button className="shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl  p-2 m-2 duration-300 w-fit  rounded-full hover:text-white hover:bg-black" onClick={() => {
-        setShowFilters(!showFilter)
-        console.log(showFilter);
-        
-      }}><FaFilter />{""}</button>
+    <div className="flex flex-col dark:bg-slate-900 dark:text-white h-[1000vh] w-[100vw]">
+
+      <div className="flex justify-center ">
+        <div className={`w-fit flex-col flex justify-center `}>
+          <button className="shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl  p-2 m-2 duration-300 w-fit  rounded-full hover:text-white hover:bg-black" onClick={() => {
+            setShowFilters(!showFilter)
+            console.log(showFilter);
+
+          }}><FaFilter />{""}</button>
+
+        </div>
+        <div>
+          <Transition
+            show={showFilter}
+            enter="duration-300"
+            enterFrom=" scale-0"
+            enterTo="scale-100"
+            leave="duration-150"
+            leaveFrom=" scale-100"
+            leaveTo="scale-0"
+          >
+            <Select
+              options={array1}
+              onChange={selected1}
+            />
+            <Select
+              options={array2}
+              onChange={selected2}
+            />
+          </Transition>
+        </div>
       </div>
-      <Transition 
-      show={showFilter}
-      enter="duration-300"
-        enterFrom=" scale-0"
-        enterTo="scale-100"
-        leave="duration-150"
-        leaveFrom=" scale-100"
-        leaveTo="scale-0"
-      >
-<Select
-options={array1}
-onChange={selected1}
-/>
-<Select
-options={array2}
-onChange={selected2}
-/>
-      </Transition></div>
-        <Pie data={dataset} options={options1} />
-      </div>
-    
+      <Pie data={dataset} options={options1} />
+      <Bar data={dataset2} options={horzontalBarOptions}/>
+    </div>
+
   );
 }
 

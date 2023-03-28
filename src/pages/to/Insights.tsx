@@ -1,4 +1,4 @@
-import Sidebar from "../Sidebar";
+import Tab from "../Tab";
 import clientPromise from "@/lib/mongodb";
 import Link from "next/link";
 import Card from "../components/Card";

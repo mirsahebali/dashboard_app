@@ -1,7 +1,7 @@
 import Head from "next/head";
 // import CountriesImpact from "./to/Charts";
 import clientPromise from "@/lib/mongodb";
-import Sidebar from "./Sidebar";
+import Tab from "./Tab";
 import Charts from "./to/Charts"
 import {AiFillPieChart} from "react-icons/ai"
 import { MdOutlineTableChart } from "react-icons/md";

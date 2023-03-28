@@ -3,7 +3,7 @@ import { AiOutlineLineChart } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { useState } from "react";
 
-function Sidebar({children, styles}:any) {
+function Tab({children, styles}:any) {
   const router = useRouter()
 const [selected, setSelected] = useState<string | null>(null)
 
@@ -14,7 +14,7 @@ const handleItemClick = (id:string) => {
 
   return (
     <>
-    <div className={`bg-gray-200 w-[100vw] p-2 `}>
+    <div className={`bg-gray-200 w-full p-2 `}>
       <div className="flex justify-between items-center">
       <div className="text-2xl">App</div>
       <div>
@@ -50,4 +50,4 @@ const handleItemClick = (id:string) => {
   );
 }
 
-export default Sidebar;
+export default Tab;
