@@ -15,9 +15,9 @@ const router = useRouter()
       </Head>
       <main className="flex justify-center items-center dark:bg-gray-800 h-[90vh]">
         <div className="flex text-2xl font-bold">
-       <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col dark:bg-red-900 dark:text-white justify-center items-center rounded-md m-5   ease-in duration-300 cursor-pointer" onClick={()=> router.push("/to/Charts")}>View Data <Link href={`to/Charts`}><AiFillPieChart/></Link></div>
+       <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col dark:bg-red-900 dark:text-white justify-center items-center rounded-md m-5   ease-in-out duration-300 hover:scale-90 cursor-pointer" onClick={()=> router.push("/to/Charts")}>View Data <Link href={`to/Charts`}><AiFillPieChart/></Link></div>
       
-     <div className="w-[40vw] h-[40vh] bg-cyan-200 flex flex-col dark:bg-cyan-900 dark:text-white justify-center items-center rounded-md m-5 cursor-pointer" onClick={()=> router.push("/to/Insights")}>View Insights<MdOutlineTableChart/></div>
+     <div className="w-[40vw] h-[40vh] bg-cyan-200 flex flex-col dark:bg-cyan-900 dark:text-white justify-center items-center rounded-md m-5 ease-in-out duration-300 hover:scale-90 cursor-pointer" onClick={()=> router.push("/to/Insights")}>View Insights<MdOutlineTableChart/></div>
 </div>
       </main>
     </>

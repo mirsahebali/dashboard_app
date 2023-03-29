@@ -3,6 +3,7 @@ import { AiOutlineLineChart } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { useState, useEffect } from 'react';
 import {BsToggleOn, BsToggleOff} from "react-icons/bs"
+import {RxDashboard} from "react-icons/rx"
 function Tab({children, styles}:any) {
 const router = useRouter()
 const [selected, setSelected] = useState<string | null>(null)
@@ -11,14 +12,14 @@ const handleItemClick = (id:string) => {
   setSelected(id);
 };
 
-const [theme, setTheme ] = useState('light');
-useEffect(()=>{
-if (window.matchMedia('prefers-color-scheme:dark').matches) {
-  setTheme("dark")
-}
-else
-setTheme("light")
-}, [])
+const [theme, setTheme ] = useState('dark');
+// useEffect(()=>{
+// if (window.matchMedia('prefers-color-scheme:dark').matches) {
+//   setTheme("dark")
+// }
+// else
+// setTheme("light")
+// }, [])
 
 useEffect(()=>{
 if (theme === 'dark') {
@@ -34,15 +35,17 @@ setTheme(newTheme)
 }
   return (
     <>
-    <div className={`bg-gray-200 dark:bg-black dark:text-white w-full p-2 `} >
+    <div className={`bg-gray-200 dark:bg-black dark:text-white w-full p-2 duration-300`} >
       <div className="flex justify-between items-center">
-      <div className="text-2xl cursor-pointer" onClick={()=> {router.push("/")
+      <div className="cursor-pointer font-extrabold flex justify-center items-center m-4" onClick={()=> {router.push("/")
     setSelected('App')
-    }}>App
+    }}>
+   <span className="text-4xl"> <RxDashboard/></span>
+     <span className="hidden md:flex text-2xl m-2"> Dashboard</span>
       </div>
-     <div className="text-4xl" onClick={()=> {
+     <div className="text-4xl hover:scale-125 duration-200" onClick={()=> {
       switchTheme()
-      setToggle(!toggle)}}>{toggle?<BsToggleOn/>: <BsToggleOff/>}</div> 
+      setToggle(!toggle)}}>{toggle?<BsToggleOff/>: <BsToggleOn/>}</div> 
       <div>
       <ul className="flex ">
         <li className={`flex  mx-2  ${selected === "item1"? "bg-black text-white dark:text-black dark:bg-white": "bg-white dark:text-white dark:bg-red-900"}   py-3 rounded-md my-2 hover:bg-black dark:hover:text-black dark:hover:bg-white duration-300 hover:scale-110 hover:text-red-100 px-2 dark:text-black`} onClick={()=> {
