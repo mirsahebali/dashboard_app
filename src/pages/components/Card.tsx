@@ -4,7 +4,7 @@ function Card({title, country, topic, region, source, start_year, end_year}:any)
           return ( 
                     <div className={styles.card}>
 
-                              <div className="bg-gradient-to-l from-cyan-500 to-yellow-400 rounded-t-md text-center">{source}</div>
+                              <div className="bg-gradient-to-l from-cyan-500 to-yellow-400 rounded-t-md text-center font-bold">{source}</div>
                               <div className="bg-yellow-200  p-1">{title}</div>
                               <div className="bg-yellow-100 rounded m-1 flex justify-center items-center">{country}</div>
                               <div className="bg-gradient-to-r from-cyan-500 to-blue-500">{topic}</div>

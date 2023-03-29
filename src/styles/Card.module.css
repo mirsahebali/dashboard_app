@@ -1,6 +1,6 @@
 .card {
   cursor: pointer;
-  
+  font-weight: bold;
   width:  fit-content;
   height: fit-content;
   background: rgb(155, 240, 248);
