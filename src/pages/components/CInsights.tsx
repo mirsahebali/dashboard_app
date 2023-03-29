@@ -1,6 +1,3 @@
-import Tab from "../Tab";
-import clientPromise from "@/lib/mongodb";
-import Link from "next/link";
 import Card from "../components/Card";
 import { Data } from "@/types";
 import { FaFilter } from "react-icons/fa"
@@ -12,25 +9,10 @@ interface Prop {
 
 }
 
-export async function getServerSideProps() {
-  try {
-    const client = await clientPromise;
-    const db = client.db("statisticsDB");
-    const res = await db.collection("worldStats").find({}).toArray();
 
-    const stats = JSON.parse(JSON.stringify(res));
-    return {
-      props: {
-        data: { stats },
-      },
-    };
-  } catch (e) {
-    console.error(e);
-  }
-}
 export default function Insights({ data }: Prop) {
   const [pr, setPr] = useState("region");
-  const insightsData: Data[] = data.stats;
+  const insightsData:any = data;
   const [filterText, updateFilterText] = useState<string | number | undefined>("World");
   const [fList, updatefList] = useState(insightsData);
   const [showFilters, setShowFilters] = useState(false)
@@ -85,7 +67,7 @@ export default function Insights({ data }: Prop) {
   const id2 = useId()
   return (
 
-    <div className="flex flex-col justify-center items-center dark:bg-slate-800 ">
+    <div className="flex flex-col justify-center items-center dark:bg-slate-900 ">
       <div className="text-2xl font-bold dark:text-white">Insights</div>
       <button className=" shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl dark:hover:bg-white dark:hover:text-black p-2 m-2 duration-300 dark:bg-blue-700  rounded-full hover:text-white hover:bg-black" onClick={() => {
         setShowFilters(!showFilters)
@@ -119,7 +101,7 @@ export default function Insights({ data }: Prop) {
 
 
 
-      <div className="scroll-smooth grid grid-cols-2 md:m-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+      <div className="scroll-smooth grid grid-cols-2 md:m-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
         {fList.map((data: any) => {
           return (
             <div key={data._id} className="scroll-smooth m-2 ">

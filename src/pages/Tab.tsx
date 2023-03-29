@@ -1,5 +1,5 @@
 import {  useRouter } from "next/router";
-import { AiOutlineLineChart } from "react-icons/ai";
+import { AiOutlineLineChart,AiFillDashboard } from "react-icons/ai";
 import { TbReportSearch } from "react-icons/tb";
 import { useState, useEffect } from 'react';
 import {BsToggleOn, BsToggleOff} from "react-icons/bs"
@@ -13,13 +13,13 @@ const handleItemClick = (id:string) => {
 };
 
 const [theme, setTheme ] = useState('dark');
-// useEffect(()=>{
-// if (window.matchMedia('prefers-color-scheme:dark').matches) {
-//   setTheme("dark")
-// }
-// else
-// setTheme("light")
-// }, [])
+useEffect(()=>{
+if (window.matchMedia('prefers-color-scheme:light').matches) {
+  setTheme("light")
+}
+else
+setTheme("dark")
+}, [])
 
 useEffect(()=>{
 if (theme === 'dark') {
@@ -48,6 +48,18 @@ setTheme(newTheme)
       setToggle(!toggle)}}>{toggle?<BsToggleOff/>: <BsToggleOn/>}</div> 
       <div>
       <ul className="flex ">
+      <li className={`flex  mx-2 justify-center ${selected === `item3`? "bg-black text-white dark:bg-white dark:text-black": "bg-white dark:bg-green-900 dark:text-white"} dark:hover:bg-green-500 py-3 rounded-md my-2 hover:bg-black  duration-300 hover:scale-110 hover:text-red-100 px-2`} onClick={()=> {
+          handleItemClick(`item3`)
+          router.push("/Dashboard")}}>
+          <span className="text-2xl flex justify-center items-center ">
+            {" "}
+            <AiFillDashboard />
+          </span>
+          <span className="hidden sm:flex justify-center items-center sm:py-1 sm:px-2">
+            DashBoard
+          </span>{" "}
+        </li>
+      
         <li className={`flex  mx-2  ${selected === "item1"? "bg-black text-white dark:text-black dark:bg-white": "bg-white dark:text-white dark:bg-red-900"}   py-3 rounded-md my-2 hover:bg-black dark:hover:text-black dark:hover:bg-white duration-300 hover:scale-110 hover:text-red-100 px-2 dark:text-black`} onClick={()=> {
           handleItemClick(`item1`)
           router.push("/to/Charts")}}>
@@ -69,7 +81,7 @@ setTheme(newTheme)
             Insights
           </span>{" "}
         </li>
-      
+   
       </ul>
       </div>
       </div>

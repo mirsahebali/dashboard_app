@@ -18,22 +18,6 @@ import { FaFilter } from "react-icons/fa";
 import Select from "react-select"
 import { Transition } from "@headlessui/react";
 
-export async function getServerSideProps() {
-  try {
-    const client = await clientPromise;
-    const db = client.db("statisticsDB");
-    const res = await db.collection("worldStats").find({}).toArray();
-
-    const stats = JSON.parse(JSON.stringify(res));
-    return {
-      props: {
-        data: { stats },
-      },
-    };
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 ChartJS.register(
   CategoryScale,
@@ -77,8 +61,7 @@ export default function Charts({ data }: any) {
 
   function arrayMaker(a: any, b: any): any[] {
     let arr: any[] = [];
-    arr = data.stats
-      .filter(
+    arr = data.filter(
         (obj: any) => obj[a] != null && obj[a] != "" && obj[a] != undefined
       )
       .reduce((accumulator: any, current: any) => {
@@ -134,7 +117,7 @@ export default function Charts({ data }: any) {
     "rgba(255, 206, 86, 0.8)",
   ];
   const options1 = {
-    responsive: true,
+    // responsive: true,
     plugins: {
       legend: {
         position: "top" as const,
@@ -212,7 +195,7 @@ export default function Charts({ data }: any) {
         text: 'Chart.js Bar Chart - Stacked',
       },
     },
-    responsive: true,
+    // responsive: true,
     scales: {
       x: {
         stacked: true,
@@ -234,7 +217,7 @@ export default function Charts({ data }: any) {
   return (
 
 
-    <div className="flex flex-col dark:bg-slate-900 dark:text-white h-[120vh] w-[100vw]">
+    <div className="flex flex-col dark:bg-slate-900 dark:text-white h-[100vh] w-[100vw]">
 
       <div className="flex justify-center ">
         <div className={`w-fit flex-col flex justify-center `}>
@@ -274,9 +257,11 @@ export default function Charts({ data }: any) {
           </Transition>
         </div>
       </div>
-      <div className="h-[100vh] flex justify-center items-center"> 
+
+      <div className=" flex justify-center items-center"> 
         {bar}{pie}{polar}{stack}
-      </div> </div>
+      </div>
+       </div>
 
   );
 }

@@ -1,10 +1,10 @@
 import Head from "next/head";
-import {AiFillPieChart} from "react-icons/ai"
+import { AiFillPieChart, AiFillDashboard, AiOutlineDashboard } from "react-icons/ai"
 import { MdOutlineTableChart } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from 'next/router';
 export default function Home() {
-const router = useRouter()
+  const router = useRouter()
   return (
     <>
       <Head>
@@ -14,11 +14,16 @@ const router = useRouter()
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex justify-center items-center dark:bg-gray-800 h-[90vh]">
-        <div className="flex text-2xl font-bold">
-       <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col dark:bg-red-900 dark:text-white justify-center items-center rounded-md m-5   ease-in-out duration-300 hover:scale-90 cursor-pointer" onClick={()=> router.push("/to/Charts")}>View Data <Link href={`to/Charts`}><AiFillPieChart/></Link></div>
-      
-     <div className="w-[40vw] h-[40vh] bg-cyan-200 flex flex-col dark:bg-cyan-900 dark:text-white justify-center items-center rounded-md m-5 ease-in-out duration-300 hover:scale-90 cursor-pointer" onClick={()=> router.push("/to/Insights")}>View Insights<MdOutlineTableChart/></div>
-</div>
+        <div className="flex text-2xl font-bold flex-col justify-center items-center">
+          <div>
+        <div className="w-[40vw] h-[40vh] bg-green-200 flex flex-col dark:bg-green-900 dark:text-white justify-center items-center rounded-md m-5 ease-in-out duration-300 hover:scale-90 cursor-pointer " onClick={() => router.push("/Dashboard")} > <span> View </span> <span>DashBoard</span> <AiFillDashboard /></div></div>
+        <div className="flex">
+          <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col dark:bg-red-900 dark:text-white justify-center items-center rounded-md m-5   ease-in-out duration-300 hover:scale-90 cursor-pointer" onClick={() => router.push("/to/Charts")}>View Data <AiFillPieChart /></div>
+          <div className="w-[40vw] h-[40vh] bg-cyan-200 flex flex-col dark:bg-cyan-900 dark:text-white justify-center items-center rounded-md m-5 ease-in-out duration-300 hover:scale-90 cursor-pointer" onClick={() => router.push("/to/Insights")}>View Insights<MdOutlineTableChart /></div>
+          </div>
+       
+        </div>
+
       </main>
     </>
   );
