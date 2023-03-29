@@ -127,6 +127,7 @@ export default function Insights({ data }: Prop) {
                 title={data.title}
                 country={data.country}
                 region={data.region}
+                source={data.source}
               />
             </div>
           );
