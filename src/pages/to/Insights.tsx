@@ -86,9 +86,9 @@ export default function Insights({ data }: Prop) {
   const id2 = useId()
   return (
 
-    <div className="flex flex-col justify-center items-center ">
-      <div className="text-2xl font-bold">Insights</div>
-      <button className=" shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl  p-2 m-2 duration-300  rounded-full hover:text-white hover:bg-black" onClick={() => {
+    <div className="flex flex-col justify-center items-center dark:bg-slate-800 ">
+      <div className="text-2xl font-bold dark:text-white">Insights</div>
+      <button className=" shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl dark:hover:bg-white dark:hover:text-black p-2 m-2 duration-300 dark:bg-blue-700  rounded-full hover:text-white hover:bg-black" onClick={() => {
         setShowFilters(!showFilters)
         console.log(showFilters);
         

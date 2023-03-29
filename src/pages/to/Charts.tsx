@@ -6,12 +6,13 @@ import {
   BarElement,
   LineElement,
   PointElement,
+  RadialLinearScale,
   Title,
   Tooltip,
   Legend,
   ArcElement,
 } from "chart.js";
-import { Pie, Line, Bar,PolarArea } from "react-chartjs-2";
+import { Pie, Line, Bar, PolarArea } from "react-chartjs-2";
 import clientPromise from "@/lib/mongodb";
 import Tab from "../Tab";
 import { Data } from "@/types";
@@ -38,6 +39,7 @@ export async function getServerSideProps() {
 
 ChartJS.register(
   CategoryScale,
+  RadialLinearScale,
   LinearScale,
   BarElement,
   Title,
@@ -60,7 +62,7 @@ export default function CountriesIntensity({ data }: any) {
   const array2: Option[] = [
     { label: "Relevance", value: "relevance", id: 1 },
     { label: "Intensity", value: "intensity", id: 2 },
-    { label: "Impact", value: "impact", id: 3 },
+    { label: "Likelihood", value: "likelihood", id: 3 },
   ]
   const [pr1, setPr1] = useState<string>("country");
   const [pr2, setPr2] = useState<string>("intensity");
@@ -70,7 +72,6 @@ export default function CountriesIntensity({ data }: any) {
   const charts: Option[] = [
     { label: "Pie", value: "pie", id: 1 },
     { label: "Bar", value: "bar", id: 2 },
-    { label: "Line", value: "line", id: 3 },
     { label: "Stack", value: "stack", id: 4 },
     { label: "Polar Area", value: "polar", id: 4 },
 
@@ -146,24 +147,7 @@ export default function CountriesIntensity({ data }: any) {
       },
     },
   };
-  const horzontalBarOptions = {
-    indexAxis: 'y' as const,
-    elements: {
-      bar: {
-        borderWidth: 2,
-      },
-    },
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'right' as const,
-      },
-      title: {
-        display: true,
-        text: `${pr1.toLocaleUpperCase()} vs ${pr2.toUpperCase()}`,
-      },
-    },
-  };
+ 
 
   const colors = [];
 
@@ -197,27 +181,67 @@ export default function CountriesIntensity({ data }: any) {
           .sort((a, b) => a[pr2] - b[pr2])
           .map((d: any) => d[pr2]),
         backgroundColor: backgroundColorArray,
-        borderColor: colors
+        borderWidth: 1
       },
     ],
   };
-
+  const dataSet3 = {
+    labels: createLabels(`${pr1}`),
+    datasets: [
+      {
+        label: 'Intensity',
+        data: arrayMaker(`${pr1}`, "intensity"),
+        backgroundColor: 'rgb(255, 99, 132)',
+      },
+      {
+        label: 'Likelihood',
+        data: arrayMaker(`${pr1}`, "likelihood").sort((a, b) => a["likelihood"] - b["likelihood"])
+        .map((d: any) => d["likelihood"]),
+        backgroundColor: 'rgb(75, 192, 192)',
+      },
+      {
+        label: 'Relevance',
+        data: arrayMaker(`${pr1}`, "relevance").sort((a, b) => a["relevance"] - b["relevance"])
+        .map((d: any) => d["relevance"]),
+        backgroundColor: 'rgb(53, 162, 235)',
+      },
+    ],
+  };
+  const stackOptions = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Chart.js Bar Chart - Stacked',
+      },
+    },
+    responsive: true,
+    scales: {
+      x: {
+        stacked: true,
+      },
+      y: {
+        stacked: true,
+      },
+    },
+  };
+   
   function chartSelected(selected: any) {
     selectTypeChart(selected.value)
 
   }
-const pie = (typeChart === "pie")? <Pie data={dataset} options={options1} />: ""
-const bar = (typeChart === "bar")? <Bar data={dataset2} options={options1}/>: ""
+  const pie = (typeChart === "pie") ? <Pie data={dataset} options={options1} /> : ""
+  const bar = (typeChart === "bar") ? <Bar data={dataset} options={options1} /> : ""
+  const polar = (typeChart === "polar")? <PolarArea data={dataset2} />: ""
+  const  stack = (typeChart === "stack")? <Bar data={dataSet3} options={stackOptions}/> : ""
   return (
 
 
-    <div className="flex flex-col dark:bg-slate-900 dark:text-white h-[1000vh] w-[100vw]">
+    <div className="flex flex-col dark:bg-slate-900 dark:text-white h-[100vh] w-[100vw]">
 
       <div className="flex justify-center ">
         <div className={`w-fit flex-col flex justify-center `}>
-          <button className="shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl  p-2 m-2 duration-300 w-fit  rounded-full hover:text-white hover:bg-black" onClick={() => {
+          <button className="shadow-lg shadow-cyan-500/50 hover:shadow-orange-500 text-2xl  p-2 m-4 duration-300 w-fit  rounded-full hover:text-white hover:bg-black" onClick={() => {
             setShowFilters(!showFilter)
-            console.log(showFilter);
 
           }}><FaFilter />{""}</button>
 
@@ -252,8 +276,9 @@ const bar = (typeChart === "bar")? <Bar data={dataset2} options={options1}/>: ""
           </Transition>
         </div>
       </div>
-   <div> {bar}{pie}
-   </div> </div>
+      <div> 
+        {bar}{pie}{polar}{stack}
+      </div> </div>
 
   );
 }

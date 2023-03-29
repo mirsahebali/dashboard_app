@@ -13,11 +13,11 @@ const router = useRouter()
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className="flex justify-center items-center dark:bg-cyan-900">
+      <main className="flex justify-center items-center dark:bg-gray-800 h-[90vh]">
         <div className="flex text-2xl font-bold">
-       <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col justify-center items-center rounded-md m-5   ease-in duration-300 cursor-pointer" onClick={()=> router.push("/to/Charts")}>View Data <Link href={`to/Charts`}><AiFillPieChart/></Link></div>
+       <div className="w-[40vw] h-[40vh] bg-pink-200 flex flex-col dark:bg-red-900 dark:text-white justify-center items-center rounded-md m-5   ease-in duration-300 cursor-pointer" onClick={()=> router.push("/to/Charts")}>View Data <Link href={`to/Charts`}><AiFillPieChart/></Link></div>
       
-     <div className="w-[40vw] h-[40vh] bg-cyan-500 flex flex-col justify-center items-center rounded-md m-5 cursor-pointer" onClick={()=> router.push("/to/Insights")}>View Insights<MdOutlineTableChart/></div>
+     <div className="w-[40vw] h-[40vh] bg-cyan-200 flex flex-col dark:bg-cyan-900 dark:text-white justify-center items-center rounded-md m-5 cursor-pointer" onClick={()=> router.push("/to/Insights")}>View Insights<MdOutlineTableChart/></div>
 </div>
       </main>
     </>
